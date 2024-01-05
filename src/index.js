@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 import wrap from '@adobe/helix-shared-wrap';
-import { logger } from '@adobe/helix-universal-logger';
-import { helixStatus } from '@adobe/helix-status';
+// import { logger } from '@adobe/helix-universal-logger';
+// import { helixStatus } from '@adobe/helix-status';
 import { Response, Headers } from '@adobe/fetch';
 
 /**
@@ -27,9 +27,10 @@ async function run(request, context) {
   console.log(`owner: ${owner}, site: ${site}, ref: ${ref}`);
   if (!owner || !site) {
     return new Response('Missing x-owner or x-site header', {
-      status: 400, headers: {
+      status: 400,
+      headers: {
         'x-error': 'Missing x-owner or x-site header',
-      }
+      },
     });
   }
   const url = new URL(request.url);
@@ -50,9 +51,10 @@ async function run(request, context) {
 
   if (!configServiceResponse.ok) {
     return new Response('Bad Gateway', {
-      status: 502, headers: {
+      status: 502,
+      headers: {
         'x-error': 'Config service is not available',
-      }
+      },
     });
   }
 
@@ -62,14 +64,13 @@ async function run(request, context) {
 
   const mountpoints = config.mountpoints || {};
   // look for a mountpoint that matches the request path
-  const mountpoint = Object.keys(mountpoints).find((key) => {
-    return pathname.startsWith(key);
-  });
+  const mountpoint = Object.keys(mountpoints).find((key) => pathname.startsWith(key));
   if (!mountpoint) {
     return new Response('Not Found', {
-      status: 404, headers: {
+      status: 404,
+      headers: {
         'x-error': 'No mountpoint found',
-      }
+      },
     });
   }
   console.log('mountpoint', mountpoint, 'backend', mountpoints[mountpoint]);
@@ -94,7 +95,9 @@ async function run(request, context) {
     // we need to jump through some extra hoops to support dynamic backends
     // as we are in isomorphic mode, we need to use dynamic imports to get
     // access to the dynamicBackends API
+    // eslint-disable-next-line import/no-unresolved
     const { allowDynamicBackends } = await import('fastly:experimental');
+    // eslint-disable-next-line import/no-unresolved
     const { Backend } = await import('fastly:backend');
 
     allowDynamicBackends(true);
@@ -116,7 +119,7 @@ async function run(request, context) {
   });
 }
 
-export const main = wrap(run)
-  .with(helixStatus)
-  .with(logger.trace)
-  .with(logger);
+export const main = wrap(run);
+//  .with(helixStatus);
+//  .with(logger.trace)
+//  .with(logger);
