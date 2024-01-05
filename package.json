@@ -13,6 +13,7 @@
     "commit": "git-cz",
     "build": "hedy -v",
     "deploy": "hedy -v --deploy --test",
+    "deploy-fastly": "node ../helix-deploy/src/index.js --arch node --arch edge --target c@e --verbose --externals fastly:experimental --externals fastly:backend --compute-service-id TMNcfgJGQ4624eEAWcI895 --fastly-auth $FASTLY_AUTH --deploy --fastly-gateway deploy-test.anywhere.run",
     "deploy-routes": "hedy --no-build --no-hints -l major",
     "deploy-ci": "hedy -v --deploy --test --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci --cleanup-ci 24h",
     "prepare": "husky install"
@@ -46,7 +47,8 @@
     "@adobe/fetch": "4.0.13",
     "@adobe/helix-shared-wrap": "2.0.0",
     "@adobe/helix-status": "10.0.9",
-    "@adobe/helix-universal-logger": "3.0.10"
+    "@adobe/helix-universal-logger": "3.0.10",
+    "@fastly/js-compute": "^3.7.3"
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "2.0.2",
